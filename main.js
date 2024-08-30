@@ -13,6 +13,7 @@ function createWindow() {
         titleBarOverlay: false,
         resizable: true,
         show: true,
+        transparent: true, 
         frame: false,
         center: true,
         webPreferences: {

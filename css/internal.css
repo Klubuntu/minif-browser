@@ -3,6 +3,7 @@ body {
     position: relative;
     top: 49px;
     overflow: hidden;
+    border-radius: 51px;
 }
 .__int_win_titlebar {
     display: flex;
