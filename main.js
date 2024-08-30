@@ -25,7 +25,8 @@ function createWindow() {
     })
     remoteMain.enable(win.webContents)
 
-    win.loadURL("https://google.com/search?q=test")
+    // win.loadURL("https://google.com/search?q=test")
+    win.loadFile("demo/test.html")
     win.webContents.on('did-finish-load', () => {
         win.webContents.executeJavaScript(`
             const content = document.querySelector('#content');
@@ -38,7 +39,26 @@ function createWindow() {
         win.webContents.openDevTools();
     });
 
-    
+
+    ipcMain.on('pageAction', async (event, action) => {
+        console.log(action)
+        if (action == "goBack") {
+            win.webContents.goBack()
+            event.sender.send('Backward page', 'Done')
+            return
+        }
+        if (action == "goForward") {
+            win.webContents.goForward()
+            event.sender.send('Forward page', 'Done')
+            return
+        }
+        if (action == "refresh") {
+            win.webContents.reload()
+            event.sender.send('Refresh page', 'Done')
+            return
+        }
+    })
+
 }
 
 app.whenReady().then(() => {
@@ -68,7 +88,11 @@ ipcMain.on("windowAction", (e, action) => {
         return
     }
     if (action == "maximize") {
-        win.maximize()
+        if(win.isMaximized()) {
+            win.unmaximize();
+        } else {
+            win.maximize();
+        }
         return
     }
     if (action == "unmaximize") {
@@ -77,4 +101,5 @@ ipcMain.on("windowAction", (e, action) => {
         return
     }
 })
+
 

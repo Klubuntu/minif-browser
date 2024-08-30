@@ -1,14 +1,48 @@
 const { ipcRenderer } = require('electron');
 
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('load', () => {
     const content = document.createElement('div');
     content.id = '__int_win_content';
 
     const header = document.createElement('header');
     header.className = '__int_win_titlebar';
 
+
+    // Page Buttons
+    const pageButtons = document.createElement('div');
+    pageButtons.className = '__int_win_box_page_btns';
+
+    const backButton = document.createElement('div');
+    backButton.className = '__int_win_opt page_back';
+    backButton.id = 'back';
+    backButton.innerText = "<";
+    backButton.addEventListener('click', () => {
+        ipcRenderer.send('pageAction', 'goBack');
+    });
+
+    const forwardButton = document.createElement('div');
+    forwardButton.className = '__int_win_opt page_forward';
+    forwardButton.id = 'forward';
+    forwardButton.innerText = ">";
+    forwardButton.addEventListener('click', () => {
+        ipcRenderer.send('pageAction', 'goForward');
+    });
+
+    const refreshButton = document.createElement('div');
+    refreshButton.className = '__int_win_opt page_refresh';
+    refreshButton.id = 'refresh';
+    refreshButton.innerText = "⟳";
+    refreshButton.addEventListener('click', () => {
+        ipcRenderer.send('pageAction', 'refresh');
+    });
+
+
+    // Action Buttons
+    const actionButtons = document.createElement('div');
+    actionButtons.className = '__int_win_box_action_btns';
+
     const closeButton = document.createElement('div');
-    closeButton.className = '__int_win_opt close';
+    closeButton.className = '__int_win_opt window_close';
     closeButton.id = 'close';
     closeButton.innerText = 'X';
     closeButton.addEventListener('click', () => {
@@ -16,7 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     const maximizeButton = document.createElement('div');
-    maximizeButton.className = '__int_win_opt max';
+    maximizeButton.className = '__int_win_opt window_max';
     maximizeButton.id = 'maximize';
     maximizeButton.innerText = '🗖';
     maximizeButton.addEventListener('click', () => {
@@ -24,16 +58,39 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     const minimizeButton = document.createElement('div');
-    minimizeButton.className = '__int_win_opt min';
+    minimizeButton.className = '__int_win_opt window_min';
     minimizeButton.id = 'minimize';
     minimizeButton.innerText = '—';
     minimizeButton.addEventListener('click', () => {
         ipcRenderer.send('windowAction', 'minimize');
     });
 
-    header.appendChild(closeButton);
-    header.appendChild(maximizeButton);
-    header.appendChild(minimizeButton);
+    // Title page
+    const titlePage = document.createElement('p');
+    titlePage.className = '__int_win_title';
+    var newTitle = document.title.substring(0, 55);
+    if(document.title.length > 55){
+        titlePage.innerText = "Minif Browser - " + newTitle + "...";
+    } else {
+        titlePage.innerText = "Minif Browser - " + newTitle;
+    }
+
+
+
+    // Add page buttons
+    pageButtons.appendChild(backButton)
+    pageButtons.appendChild(refreshButton)
+    pageButtons.appendChild(forwardButton)
+    header.appendChild(pageButtons);
+
+    // Add Title page
+    header.appendChild(titlePage)
+
+    // Add actions buttons
+    actionButtons.appendChild(minimizeButton);
+    actionButtons.appendChild(maximizeButton);
+    actionButtons.appendChild(closeButton);
+    header.appendChild(actionButtons);
 
     content.appendChild(header);
 
@@ -48,13 +105,33 @@ window.addEventListener('DOMContentLoaded', () => {
         }
         .__int_win_titlebar {
             display: flex;
-            flex-direction: row-reverse;
-            justify-content: flex-start;
+            align-items: center;
+            justify-content: space-between;
             background: #353535;
             color: black;
             align-self: stretch;
             -webkit-app-region: drag;
         }
+        .__int_win_box_page_btns,
+        .__int_win_box_action_btns{
+            display: flex;
+        }
+
+        .__int_win_box_page_btns{
+            align-items: center;
+            justify-content: center;
+        }
+
+        .__int_win_opt.page_refresh{
+            position: relative;
+            bottom: 1px;
+            font-size: 160%;
+        }
+
+        .__int_win_title{
+            color: white;
+        }
+
         #__int_win_content {
             position: fixed;
             top: 0;
