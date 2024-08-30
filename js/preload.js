@@ -99,10 +99,8 @@ window.addEventListener('load', () => {
     ipcRenderer.send('loadFile', 'styles');
     ipcRenderer.on('loaded-styles', (e, stylesData) => {
         const style = document.createElement('style');
-        console.log(stylesData)
         style.textContent = stylesData;
         document.head.appendChild(style);
-        console.log("Received File")
     })
 
 });

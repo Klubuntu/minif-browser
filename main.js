@@ -81,7 +81,6 @@ ipcMain.on("loadFile", (e, action) => {
     if(action == "styles"){
         const fs = require('fs')
         const stylesData = fs.readFileSync(path.join(__dirname, "css", 'internal.css')).toString()
-        console.log("Sended file")
         e.sender.send("loaded-styles", stylesData)
     }
 })
