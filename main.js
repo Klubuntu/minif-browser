@@ -40,21 +40,21 @@ function createWindow() {
     });
 
 
-    ipcMain.on('pageAction', async (event, action) => {
+    ipcMain.on('pageAction', async (e, action) => {
         console.log(action)
         if (action == "goBack") {
             win.webContents.goBack()
-            event.sender.send('Backward page', 'Done')
+            e.sender.send('Backward page', 'Done')
             return
         }
         if (action == "goForward") {
             win.webContents.goForward()
-            event.sender.send('Forward page', 'Done')
+            e.sender.send('Forward page', 'Done')
             return
         }
         if (action == "refresh") {
             win.webContents.reload()
-            event.sender.send('Refresh page', 'Done')
+            e.sender.send('Refresh page', 'Done')
             return
         }
     })
@@ -76,6 +76,15 @@ app.on('window-all-closed', () => {
         app.quit();
     }
 });
+
+ipcMain.on("loadFile", (e, action) => {
+    if(action == "styles"){
+        const fs = require('fs')
+        const stylesData = fs.readFileSync(path.join(__dirname, "css", 'internal.css')).toString()
+        console.log("Sended file")
+        e.sender.send("loaded-styles", stylesData)
+    }
+})
 
 ipcMain.on("windowAction", (e, action) => {
     console.log(action)

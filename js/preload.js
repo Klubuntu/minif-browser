@@ -96,64 +96,13 @@ window.addEventListener('load', () => {
 
     document.body.prepend(content);
 
-    const style = document.createElement('style');
-    style.textContent = `
-        body {
-            margin: 0 auto;
-            position: relative;
-            top: 49px;
-        }
-        .__int_win_titlebar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #353535;
-            color: black;
-            align-self: stretch;
-            -webkit-app-region: drag;
-        }
-        .__int_win_box_page_btns,
-        .__int_win_box_action_btns{
-            display: flex;
-        }
+    ipcRenderer.send('loadFile', 'styles');
+    ipcRenderer.on('loaded-styles', (e, stylesData) => {
+        const style = document.createElement('style');
+        console.log(stylesData)
+        style.textContent = stylesData;
+        document.head.appendChild(style);
+        console.log("Received File")
+    })
 
-        .__int_win_box_page_btns{
-            align-items: center;
-            justify-content: center;
-        }
-
-        .__int_win_opt.page_refresh{
-            position: relative;
-            bottom: 1px;
-            font-size: 160%;
-        }
-
-        .__int_win_title{
-            color: white;
-        }
-
-        #__int_win_content {
-            position: fixed;
-            top: 0;
-            z-index: 9999999;
-            display: flex;
-            width: 100%;
-            flex-direction: column;
-            background: black;
-            align-items: center;
-        }
-        .__int_win_opt {
-            color: white;
-            padding: 3px 10px;
-            font-size: 16px;
-            cursor: pointer;
-            -webkit-app-region: no-drag;
-        }
-        .option:hover {
-            background: red;
-        }
-    `;
-
-    // Append the style element to the head
-    document.head.appendChild(style);
 });
