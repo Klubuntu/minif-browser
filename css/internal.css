@@ -25,11 +25,20 @@ body {
 
 .__int_win_opt.page_refresh{
     position: relative;
-    bottom: 1px;
     font-size: 160%;
+    position: relative;
+    top: 0.5px;
+    right: 10px;
+}
+
+.__int_win_opt.page_forward{
+    position: relative;
+    right: 17px;
 }
 
 .__int_win_title{
+    position: relative;
+    bottom: 3px;
     color: white;
     font-size: 1.1em;
 }

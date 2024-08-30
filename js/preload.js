@@ -15,26 +15,50 @@ window.addEventListener('load', () => {
     const backButton = document.createElement('div');
     backButton.className = '__int_win_opt page_back';
     backButton.id = 'back';
-    backButton.innerText = "<";
     backButton.addEventListener('click', () => {
         ipcRenderer.send('pageAction', 'goBack');
     });
 
+    const backButtonImg = document.createElement("img");
+    ipcRenderer.send('loadFile', 'nav_left');
+    ipcRenderer.on('loaded-icon-left', (e, imageData) => {
+        backButtonImg.src = `data:image/png;base64,${imageData}`
+        backButtonImg.width = 35;
+        backButton.appendChild(backButtonImg)
+    })
+
     const forwardButton = document.createElement('div');
     forwardButton.className = '__int_win_opt page_forward';
     forwardButton.id = 'forward';
-    forwardButton.innerText = ">";
     forwardButton.addEventListener('click', () => {
         ipcRenderer.send('pageAction', 'goForward');
     });
 
+    const forwardButtonImg = document.createElement("img");
+    forwardButtonImg.width = 35;
+    ipcRenderer.send('loadFile', 'nav_right');
+    ipcRenderer.on('loaded-icon-right', (e, imageData) => {
+        forwardButtonImg.src = `data:image/png;base64,${imageData}`
+        forwardButton.appendChild(forwardButtonImg)
+    })
+
+
+
     const refreshButton = document.createElement('div');
     refreshButton.className = '__int_win_opt page_refresh';
     refreshButton.id = 'refresh';
-    refreshButton.innerText = "⟳";
     refreshButton.addEventListener('click', () => {
         ipcRenderer.send('pageAction', 'refresh');
     });
+
+    const refreshButtonImg = document.createElement("img");
+
+    refreshButtonImg.width = 24;
+    ipcRenderer.send('loadFile', 'nav_reload');
+    ipcRenderer.on('loaded-icon-reload', (e, imageData) => {
+        refreshButtonImg.src = `data:image/png;base64,${imageData}`
+        refreshButton.appendChild(refreshButtonImg)
+    })
 
 
     // Action Buttons
@@ -103,6 +127,8 @@ window.addEventListener('load', () => {
         document.head.appendChild(style);
     })
 
+    // Scrollbar Experimental
+
     const scrollbar = document.createElement('div')
     scrollbar.id = '__int_win_scrollbar';
     scrollbar.className = '__int_win_scrollbar';
@@ -118,7 +144,7 @@ window.addEventListener('load', () => {
 
     const updateThumbHeight = () => {
         const scrollbarHeight = scrollbar.clientHeight;
-        const thumbHeight = Math.max(scrollbarHeight * (viewportHeight / documentHeight), 30); // Minimalna wysokość thumb
+        const thumbHeight = Math.max(scrollbarHeight * (viewportHeight / documentHeight), 30); // Minimal width thumb
         thumb.style.height = thumbHeight + 'px';
     };
 

@@ -80,8 +80,30 @@ app.on('window-all-closed', () => {
 ipcMain.on("loadFile", (e, action) => {
     if(action == "styles"){
         const fs = require('fs')
-        const stylesData = fs.readFileSync(path.join(__dirname, "css", 'internal.css')).toString()  
+        const stylesData = fs.readFileSync(path.join(__dirname, "css", 'internal.css')).toString()
         e.sender.send("loaded-styles", stylesData)
+        return
+    }
+    if(action == "nav_left"){
+        const fs = require('fs')
+        const iconData = fs.readFileSync(path.join(__dirname, "assets", "icons", 'nav_left.png'))
+        const iconBase = iconData.toString('base64')
+        e.sender.send("loaded-icon-left", iconBase)
+        return
+    }
+    if(action == "nav_reload"){
+        const fs = require('fs')
+        const iconData = fs.readFileSync(path.join(__dirname, "assets", "icons", 'nav_refresh.png'))
+        const iconBase = iconData.toString('base64')
+        e.sender.send("loaded-icon-reload", iconBase)
+        return
+    }
+    if(action == "nav_right"){
+        const fs = require('fs')
+        const iconData = fs.readFileSync(path.join(__dirname, "assets", "icons", 'nav_right.png'))
+        const iconBase = iconData.toString('base64')
+        e.sender.send("loaded-icon-right", iconBase)
+        return
     }
 })
 
