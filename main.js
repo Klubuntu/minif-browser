@@ -80,7 +80,7 @@ app.on('window-all-closed', () => {
 ipcMain.on("loadFile", (e, action) => {
     if(action == "styles"){
         const fs = require('fs')
-        const stylesData = fs.readFileSync(path.join(__dirname, "css", 'internal.css')).toString()
+        const stylesData = fs.readFileSync(path.join(__dirname, "css", 'internal.css')).toString()  
         e.sender.send("loaded-styles", stylesData)
     }
 })

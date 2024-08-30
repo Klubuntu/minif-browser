@@ -103,4 +103,54 @@ window.addEventListener('load', () => {
         document.head.appendChild(style);
     })
 
+    const scrollbar = document.createElement('div')
+    scrollbar.id = '__int_win_scrollbar';
+    scrollbar.className = '__int_win_scrollbar';
+    const thumb = document.createElement('div')
+    thumb.id = '__int_win_scrollbar_thumb';
+    thumb.className = '__int_win_scrollbar_thumb';
+    scrollbar.appendChild(thumb);
+    document.body.appendChild(scrollbar);
+
+
+    const documentHeight = document.body.scrollHeight;
+    const viewportHeight = window.innerHeight;
+
+    const updateThumbHeight = () => {
+        const scrollbarHeight = scrollbar.clientHeight;
+        const thumbHeight = Math.max(scrollbarHeight * (viewportHeight / documentHeight), 30); // Minimalna wysokość thumb
+        thumb.style.height = thumbHeight + 'px';
+    };
+
+    const onThumbMouseDown = (e) => {
+        e.preventDefault();
+        const startY = e.clientY;
+        const startTop = thumb.offsetTop;
+
+        const onMouseMove = (e) => {
+            const deltaY = e.clientY - startY;
+            const newTop = Math.min(Math.max(startTop + deltaY, 0), scrollbar.clientHeight - thumb.clientHeight);
+            thumb.style.top = newTop + 'px';
+
+            const scrollPercent = newTop / (scrollbar.clientHeight - thumb.clientHeight);
+            window.scroll({
+                top: scrollPercent * (document.body.scrollHeight - window.innerHeight),
+                behavior: 'smooth'
+            });
+        };
+
+        const onMouseUp = () => {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    };
+
+    thumb.addEventListener('mousedown', onThumbMouseDown);
+    window.addEventListener('resize', updateThumbHeight);
+    updateThumbHeight();
+
+
 });
