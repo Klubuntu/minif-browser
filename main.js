@@ -1,7 +1,7 @@
 const remoteMain = require('@electron/remote/main')
 remoteMain.initialize()
 
-const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
+const { app, BrowserWindow, globalShortcut, webFrame, ipcMain } = require('electron');
 const protocols = require('electron-protocols');
 const path = require('node:path')
 const url = require('node:url')
@@ -93,6 +93,7 @@ function createWindow() {
         }
     });
     win.webContents.on('did-start-navigation', (e, navigateUrl) => {
+        win.webContents.executeJavaScript(`// Code to execure - before load page`);
     });
     win.webContents.on('did-finish-load', () => {
         win.webContents.executeJavaScript(`
@@ -114,12 +115,12 @@ function createWindow() {
     ipcMain.on('pageAction', async (e, action) => {
         console.log(action)
         if (action == "goBack") {
-            win.webContents.goBack()
+            win.webContents.navigationHistory.goBack()
             e.sender.send('Backward page', 'Done')
             return
         }
         if (action == "goForward") {
-            win.webContents.goForward()
+            win.webContents.navigationHistory.goForward()
             e.sender.send('Forward page', 'Done')
             return
         }
@@ -152,6 +153,13 @@ app.whenReady().then(() => {
     globalShortcut.register('Alt+R', () => {
         win.webContents.navigationHistory.goForward()
     })
+    globalShortcut.register('Ctrl+"+"', () => {
+        webFrame.setZoomFactor(1)
+    })
+    globalShortcut.register('Ctrl+"-"', () => {
+        webFrame.setZoomFactor(2)
+    })
+    
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
