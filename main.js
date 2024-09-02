@@ -1,7 +1,7 @@
 const remoteMain = require('@electron/remote/main')
 remoteMain.initialize()
 
-const { app, protocol, net, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
 const protocols = require('electron-protocols');
 const path = require('node:path')
 const url = require('node:url')
@@ -16,6 +16,9 @@ protocols.register('browser', uri => {
     }
     if (uri.hostname == "demo") {
         return path.join(root, "demo", "test.html")
+    }
+    if (uri.hostname == "help") {
+        return path.join(root, "demo", "help.html")
     }
     // Error Pages
     if ((uri.hostname + uri.path) == "error/file") {
@@ -100,7 +103,6 @@ function createWindow() {
         `);
 
         win.show();
-        win.webContents.openDevTools();
     });
 
     ipcMain.on("changeUrl", (e, url) => {
@@ -132,6 +134,24 @@ function createWindow() {
 
 app.whenReady().then(() => {
     createWindow();
+
+    globalShortcut.register('F1', () => {
+        console.log('help')
+        win.loadURL("browser://help");
+    })
+    globalShortcut.register('F12', () => {
+        console.log('dev_tool')
+        win.webContents.openDevTools();
+    })
+    globalShortcut.register('Ctrl+R', () => {
+        win.webContents.executeJavaScript('window.location.reload()')
+    })
+    globalShortcut.register('Alt+L', () => {
+        win.webContents.navigationHistory.goBack()
+    })
+    globalShortcut.register('Alt+R', () => {
+        win.webContents.navigationHistory.goForward()
+    })
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
