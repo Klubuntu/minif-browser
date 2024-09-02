@@ -62,15 +62,14 @@ function createWindow() {
     win.loadURL("browser://start")
     win.webContents.on('did-fail-load', (e, errorCode, errorDescription, validatedURL) => {
         console.log(errorCode, ": ", errorDescription);
-        const errorPages = path.join(__dirname, 'demo', 'error')
         if (errorCode === -2) {
-            win.loadURL("browser://error/file_err");
+            win.loadURL("browser://error/file");
         }
         if (errorCode === -6) {
             win.loadURL("browser://error/file");
         }
         if (errorCode === -105) {
-            win.loadURL("browser://error/invalid_url");
+            win.loadURL("browser://error/not_resolved");
         }
         if (errorCode === -200) {
             win.loadURL("browser://error/cert");
@@ -80,6 +79,14 @@ function createWindow() {
         }
         if (errorCode === -300) {
             win.loadURL("browser://error/invalid_url");
+            // if(/^https?:\/\//.test(queryURL) == false){
+            //     const searchURL = "https://www.google.com/search?q="
+            //     const searchQuery = searchURL + queryURL;
+            //     console.log(searchQuery)
+            //     // win.loadURL(searchQuery);
+            // } else {
+            //     win.loadURL("browser://error/invalid_url");
+            // }
         }
     });
     win.webContents.on('did-start-navigation', (e, navigateUrl) => {
