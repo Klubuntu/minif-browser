@@ -1,4 +1,4 @@
-const { ipcRenderer } = require('electron');
+const { ipcRenderer} = require('electron');
 
 window.addEventListener('load', () => {
     const content = document.createElement('div');
@@ -99,7 +99,29 @@ window.addEventListener('load', () => {
         titlePage.innerText = "Minif Browser - " + newTitle;
     }
 
+    // Url input
+    const urlInput = document.createElement('input')
+    urlInput.type = "text"
+    urlInput.className = "__int_win_url";
+    urlInput.value = window.location.href;
 
+    // Event listeners
+    titlePage.addEventListener("click", () => {
+        titlePage.style.display = "none";
+        urlInput.style.display = "block";
+    })
+    urlInput.addEventListener("dblclick", () => {
+        urlInput.style.display = "none";
+        titlePage.style.display = "block";
+    })
+    urlInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            ipcRenderer.send("changeUrl", urlInput.value)
+            urlInput.style.display = "none";
+            titlePage.style.display = "block";
+        }
+    })
 
     // Add page buttons
     pageButtons.appendChild(backButton)
@@ -109,6 +131,8 @@ window.addEventListener('load', () => {
 
     // Add Title page
     header.appendChild(titlePage)
+    // Add Url Input
+    header.appendChild(urlInput)
 
     // Add actions buttons
     actionButtons.appendChild(minimizeButton);
@@ -117,7 +141,6 @@ window.addEventListener('load', () => {
     header.appendChild(actionButtons);
 
     content.appendChild(header);
-
     document.body.prepend(content);
 
     ipcRenderer.send('loadFile', 'styles');

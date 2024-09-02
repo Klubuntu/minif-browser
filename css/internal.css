@@ -6,6 +6,7 @@ body {
     border-radius: 51px;
 }
 .__int_win_titlebar {
+    padding: 3px 2px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -15,16 +16,16 @@ body {
     -webkit-app-region: drag;
 }
 .__int_win_box_page_btns,
-.__int_win_box_action_btns{
+.__int_win_box_action_btns {
     display: flex;
 }
 
-.__int_win_box_page_btns{
+.__int_win_box_page_btns {
     align-items: center;
     justify-content: center;
 }
 
-.__int_win_opt.page_refresh{
+.__int_win_opt.page_refresh {
     position: relative;
     font-size: 160%;
     position: relative;
@@ -32,22 +33,34 @@ body {
     right: 10px;
 }
 
-.__int_win_opt.page_forward{
+.__int_win_opt.page_forward {
     position: relative;
     right: 17px;
 }
 
-.__int_win_title{
+.__int_win_title {
+    margin: 0;
     position: relative;
     bottom: 3px;
     color: white;
     font-size: 1.1em;
+    -webkit-app-region: none;
+}
+
+.__int_win_url {
+    display: none;
+    width: 70%;
+    padding: 5px;
+    border: none;
+    outline: none;
+    border-radius: 7px;
+    -webkit-app-region: none;
 }
 
 #__int_win_content {
     position: fixed;
     top: 0;
-    z-index: 9999999;
+    z-index: 9999999999;
     display: flex;
     width: 100%;
     flex-direction: column;

@@ -40,6 +40,11 @@ function createWindow() {
         win.webContents.openDevTools();
     });
 
+    ipcMain.on("changeUrl", (e, url) => {
+        console.log("Url:", url)
+        win.loadURL(url)
+    })
+
 
     ipcMain.on('pageAction', async (e, action) => {
         console.log(action)
