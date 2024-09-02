@@ -4,16 +4,46 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "electron-builder",
+    "build-win": "electron-builder --windows",
+    "build-macos": "electron-builder --macos",
+    "build-linux": "electron-builder --linux"
   },
-  "author": "",
+  "author": "Kamil Klubuntu <klubuntu.dev@gmail.com>",
+  "email": "klubuntu.dev@gmail.com",
   "license": "ISC",
   "description": "",
   "dependencies": {
     "@electron/remote": "^2.1.2",
+    "dmg-license": "^1.0.11",
     "jquery": "^3.5.1"
   },
+  "build": {
+    "appId": "klb.minif.browser",
+    "productName": "Minif Browser",
+    "dmg": {
+      "backgroundColor": "#ffffff",
+      "format": "ULFO",
+      "icon": false,
+      "iconSize": 80,
+      "iconTextSize": 12,
+      "internetEnabled": false,
+      "publish": true,
+      "sign": true,
+      "title": "${productName} ${version}"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "NSIS"
+    }
+  },
   "devDependencies": {
-    "electron": "^32.0.1" 
+    "electron": "^32.0.1",
+    "electron-builder": "^24.13.3"
   }
 }
