@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Browser</title>
+    <style>
+        body{
+            color: white;
+        }
+        .info1{
+            margin-bottom: 15px;
+        }
+        .info2{
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="info1">Minif browser</h1>
+    <h4 class="info2">created by Kamil Klubuntu</h4>
+    <p>Copyright (v1.0.1) &copy;</p>
+    <button onclick="openURL('gt')">Check my other projects</button>
+    <button onclick="openURL('sm')">Check social media</button>
+    <button onclick="openURL('yt')">Check other videos from making this browser</button>
+
+    <script>
+        const openURL = (url) => {
+            switch(url){
+                case 'gt':
+                    rURL = "https://github.com/klubuntu"
+                    break
+                case 'yt':
+                    rURL = "https://youtube.com/@klubuntu"
+                    break
+                case 'sm':
+                    rURL = "https://klubuntu.eu.org"
+                    break
+            }
+            window.location.href = rURL
+            
+        }
+    </script>
+</body>
+</html>
