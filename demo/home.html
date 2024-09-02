@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        body{
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome on Minif Browser</h1>
+    <h4>Suggested URL:</h4>
+    <button onclick="openURL('gg')">Google</button>
+    <button onclick="openURL('yt')">Youtube</button>
+    <button onclick="openURL('fb')">Facebook</button>
+    <button onclick="openURL('am')">Amazon</button>
+
+    <script>
+        const openURL = (url) => {
+            switch(url){
+                case 'gg':
+                    rURL = "https://google.com"
+                    break
+                case 'yt':
+                    rURL = "https://youtube.com"
+                    break
+                case 'fb':
+                    rURL = "https://facebook.com"
+                    break
+                case 'am':
+                    rURL = "https://amazon.com"
+                    break
+            }
+            window.location.href = rURL
+            
+        }
+    </script>
+</body>
+</html>
