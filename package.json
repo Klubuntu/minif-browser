@@ -22,6 +22,7 @@
     "appId": "klb.minif.browser",
     "productName": "Minif Browser",
     "linux": {
+      "category": "Internet",
       "target": [
         "AppImage",
         "deb"
