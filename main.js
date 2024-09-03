@@ -53,16 +53,18 @@ function createWindow() {
         center: true,
         webPreferences: {
             nodeIntegration: true,
+            nativeWindowOpen: true,
             contextIsolation: false,
             enableRemoteModule: true,
+            webviewTag: true,
             preload: path.join(__dirname, "js", 'preload.js')
         },
         backgroundColor: '#171614'
     })
     remoteMain.enable(win.webContents)
 
-    // win.loadURL("https://google.com/search?q=test")
-    win.loadURL("browser://start")
+    // win.loadURL("browser://frame")
+    win.loadFile("demo/frame.html")
     win.webContents.on('did-fail-load', (e, errorCode, errorDescription, validatedURL) => {
         console.log(errorCode, ": ", errorDescription);
         if (errorCode === -2) {
