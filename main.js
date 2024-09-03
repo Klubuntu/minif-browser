@@ -1,7 +1,7 @@
 const remoteMain = require('@electron/remote/main')
 remoteMain.initialize()
 
-const { app, BrowserWindow, globalShortcut, webFrame, ipcMain } = require('electron');
+const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
 const protocols = require('electron-protocols');
 const path = require('node:path')
 
@@ -83,18 +83,10 @@ function createWindow() {
         }
         if (errorCode === -300) {
             win.loadURL("browser://error/invalid_url");
-            // if(/^https?:\/\//.test(queryURL) == false){
-            //     const searchURL = "https://www.google.com/search?q="
-            //     const searchQuery = searchURL + queryURL;
-            //     console.log(searchQuery)
-            //     // win.loadURL(searchQuery);
-            // } else {
-            //     win.loadURL("browser://error/invalid_url");
-            // }
         }
     });
     win.webContents.on('did-start-navigation', (e, navigateUrl) => {
-        win.webContents.executeJavaScript(`// Code to execure - before load page`);
+        win.webContents.executeJavaScript(`// Code to execute - before load page`);
     });
     win.webContents.on('did-finish-load', () => {
         win.webContents.executeJavaScript(`
@@ -106,6 +98,37 @@ function createWindow() {
 
         win.show();
     });
+
+    win.webContents.on('blur', () => {
+        globalShortcut.unregisterAll()
+        console.warn("Not focusing");
+    })
+
+    win.webContents.on('focus', () => {
+        globalShortcut.register('F1', () => {
+            console.log('Loading help')
+            win.webContents.executeJavaScript("document.querySelector('webview').loadURL('browser://help')")
+        })
+        globalShortcut.register('Shift+F12', () => {
+            console.log('Opening app dev_tool')
+            win.webContents.openDevTools();
+        })
+        globalShortcut.register('F12', () => {
+            console.log('Opening dev_tool')
+            // win.webContents.openDevTools();
+            win.webContents.executeJavaScript("document.querySelector('webview').openDevTools()");
+        })
+        globalShortcut.register('Ctrl+R', () => {
+            win.webContents.executeJavaScript("document.querySelector('webview').reload()");
+        })
+        globalShortcut.register('Alt+L', () => {
+            win.webContents.executeJavaScript("document.querySelector('webview').goBack()");
+        })
+        globalShortcut.register('Alt+R', () => {
+            win.webContents.executeJavaScript("document.querySelector('webview').goForward()");
+        })
+        console.warn("Focusing");
+    })
 
     ipcMain.on("changeUrl", (e, url) => {
         console.log("Url:", url)
@@ -135,32 +158,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-    createWindow();
-
-    globalShortcut.register('F1', () => {
-        console.log('help')
-        win.loadURL("browser://help");
-    })
-    globalShortcut.register('F12', () => {
-        console.log('dev_tool')
-        win.webContents.openDevTools();
-    })
-    globalShortcut.register('Ctrl+R', () => {
-        win.webContents.executeJavaScript('window.location.reload()')
-    })
-    globalShortcut.register('Alt+L', () => {
-        win.webContents.navigationHistory.goBack()
-    })
-    globalShortcut.register('Alt+R', () => {
-        win.webContents.navigationHistory.goForward()
-    })
-    globalShortcut.register('Ctrl+"+"', () => {
-        webFrame.setZoomFactor(1)
-    })
-    globalShortcut.register('Ctrl+"-"', () => {
-        webFrame.setZoomFactor(2)
-    })
-    
+    createWindow();    
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
