@@ -56,7 +56,6 @@ function createWindow() {
             contextIsolation: false,
             enableRemoteModule: true,
             webviewTag: true,
-            // preload: path.join(__dirname, "js", 'preload.js')
         },
         backgroundColor: '#171614'
     })
@@ -115,7 +114,6 @@ function createWindow() {
         })
         globalShortcut.register('F12', () => {
             console.log('Opening dev_tool')
-            // win.webContents.openDevTools();
             win.webContents.executeJavaScript("document.querySelector('webview').openDevTools()");
         })
         globalShortcut.register('Ctrl+R', () => {
@@ -128,11 +126,6 @@ function createWindow() {
             win.webContents.executeJavaScript("document.querySelector('webview').goForward()");
         })
         console.warn("Focusing");
-    })
-
-    ipcMain.on("changeUrl", (e, url) => {
-        console.log("Url:", url)
-        win.loadURL(url)
     })
 
 
@@ -172,36 +165,6 @@ app.on('window-all-closed', () => {
         app.quit();
     }
 });
-
-ipcMain.on("loadFile", (e, action) => {
-    if (action == "styles") {
-        const fs = require('fs')
-        const stylesData = fs.readFileSync(path.join(__dirname, "css", 'internal.css')).toString()
-        e.sender.send("loaded-styles", stylesData)
-        return
-    }
-    if (action == "nav_left") {
-        const fs = require('fs')
-        const iconData = fs.readFileSync(path.join(__dirname, "assets", "icons", 'nav_left.png'))
-        const iconBase = iconData.toString('base64')
-        e.sender.send("loaded-icon-left", iconBase)
-        return
-    }
-    if (action == "nav_reload") {
-        const fs = require('fs')
-        const iconData = fs.readFileSync(path.join(__dirname, "assets", "icons", 'nav_refresh.png'))
-        const iconBase = iconData.toString('base64')
-        e.sender.send("loaded-icon-reload", iconBase)
-        return
-    }
-    if (action == "nav_right") {
-        const fs = require('fs')
-        const iconData = fs.readFileSync(path.join(__dirname, "assets", "icons", 'nav_right.png'))
-        const iconBase = iconData.toString('base64')
-        e.sender.send("loaded-icon-right", iconBase)
-        return
-    }
-})
 
 ipcMain.on("windowAction", (e, action) => {
     console.log(action)
