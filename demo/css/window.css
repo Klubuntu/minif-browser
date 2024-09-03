@@ -2,8 +2,8 @@ body {
     margin: 0 auto;
     position: relative;
     top: 49px;
-    overflow: hidden;
     border-radius: 51px;
+    overflow: hidden;
 }
 .__int_win_titlebar {
     padding: 3px 2px;
@@ -117,4 +117,9 @@ body::-webkit-scrollbar-thumb {
 }
 body::-webkit-scrollbar-track {
     background-color: rgba(0,0,0,0);
+}
+
+webview{
+    overflow: auto;
+    overflow-y: scroll;
 }
