@@ -4,7 +4,6 @@ remoteMain.initialize()
 const { app, BrowserWindow, globalShortcut, webFrame, ipcMain } = require('electron');
 const protocols = require('electron-protocols');
 const path = require('node:path')
-const url = require('node:url')
 
 let win;
 
@@ -57,7 +56,7 @@ function createWindow() {
             contextIsolation: false,
             enableRemoteModule: true,
             webviewTag: true,
-            preload: path.join(__dirname, "js", 'preload.js')
+            // preload: path.join(__dirname, "js", 'preload.js')
         },
         backgroundColor: '#171614'
     })
