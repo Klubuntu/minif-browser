@@ -12,6 +12,7 @@ body {
     justify-content: space-between;
     background: #353535;
     color: black;
+    border-radius: 12px;
     align-self: stretch;
     -webkit-app-region: drag;
 }
@@ -65,6 +66,7 @@ body {
     width: 100%;
     flex-direction: column;
     background: black;
+    border-radius: 12px;
     align-items: center;
 }
 .__int_win_opt {
