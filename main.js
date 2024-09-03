@@ -44,6 +44,7 @@ function createWindow() {
     win = new BrowserWindow({
         width: 980,
         height: 552,
+        icon: path.join(__dirname, 'assets/icons/logo/256x256.png'),
         titleBarOverlay: false,
         resizable: true,
         show: true,
