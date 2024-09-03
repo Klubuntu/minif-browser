@@ -1,4 +1,7 @@
 const { ipcRenderer, ipcMain } = require('electron');
+
+var oldURL = "";
+
 const setWebviewSize = () => {
     const windowWidth = document.documentElement.clientWidth;
     const windowHeight = document.documentElement.clientHeight;
@@ -55,6 +58,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 
     webviewElm.addEventListener('did-fail-load', (e,) => {
+        console.log(e)
         if (e.errorCode === -2) {
             webviewElm.loadURL("browser://error/file");
         }
@@ -71,15 +75,15 @@ window.addEventListener("DOMContentLoaded", () => {
             webviewElm.loadURL("browser://error/cert_date");
         }
         if (e.errorCode === -300) {
-            webviewElm.loadURL("browser://error/invalid_url");
-            // if(/^https?:\/\//.test(queryURL) == false){
-            //     const searchURL = "https://www.google.com/search?q="
-            //     const searchQuery = searchURL + queryURL;
-            //     console.log(searchQuery)
-            //     // win.loadURL(searchQuery);
-            // } else {
-            //     win.loadURL("browser://error/invalid_url");
-            // }
+            // webviewElm.loadURL("browser://error/invalid_url");
+            if(/^https?:\/\//.test(oldURL) == false){
+                const searchURL = "https://www.google.com/search?q="
+                const searchQuery = searchURL + oldURL;
+                console.log(searchQuery)
+                webviewElm.loadURL(searchQuery);
+            } else {
+                webviewElm.loadURL("browser://error/invalid_url");
+            }
         }
     })
 
@@ -114,6 +118,7 @@ window.addEventListener("DOMContentLoaded", () => {
     urlInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
+            oldURL = urlInput.value
             webviewElm.loadURL(urlInput.value)
             urlInput.style.display = "none";
             titlePage.style.display = "block";
