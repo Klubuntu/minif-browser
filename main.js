@@ -117,6 +117,10 @@ function createWindow() {
             console.log('Opening dev_tool')
             win.webContents.executeJavaScript("document.querySelector('webview').openDevTools()");
         })
+        globalShortcut.register('Ctrl+Shift+I', () => {
+            console.log('Opening dev_tool')
+            win.webContents.executeJavaScript("document.querySelector('webview').openDevTools()");
+        })
         globalShortcut.register('Ctrl+R', () => {
             win.webContents.executeJavaScript("document.querySelector('webview').reload()");
         })

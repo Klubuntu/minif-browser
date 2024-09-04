@@ -28,7 +28,7 @@ npm/pnpm run build-macos (experimental)
 
 ### App Shortcuts
 - <kbd>F1</kbd> (Information page)
-- <kbd>F12</kbd> (Dev Tools)
+- <kbd>F12</kbd> or <kbd>CTRL</kbd> + <kbd>SHIFT</kbd> + <kbd>I</kbd>(Dev Tools)
 - <kbd>CTRL</kbd> + <kbd>R</kbd> Reload current page
 - <kbd>ALT</kbd> + <kbd>L</kbd> History back
 - <kbd>ALT</kbd> + <kbd>R</kbd> History forward
