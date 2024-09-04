@@ -1,4 +1,4 @@
-const { ipcRenderer, ipcMain } = require('electron');
+const { ipcRenderer } = require('electron');
 
 var oldURL = "";
 
@@ -94,6 +94,7 @@ window.addEventListener("DOMContentLoaded", () => {
         } else {
             titlePage.innerText = "Minif Browser - " + newTitle;
         }
+        ipcRenderer.send("updateWinTitle", titlePage.textContent)
         urlInput.value = webviewElm.getURL();
     })
 
@@ -104,6 +105,7 @@ window.addEventListener("DOMContentLoaded", () => {
         } else {
             titlePage.innerText = "Minif Browser - " + newTitle;
         }
+        ipcRenderer.send("updateWinTitle", titlePage.textContent)
         urlInput.value = webviewElm.getURL();
     })
 
