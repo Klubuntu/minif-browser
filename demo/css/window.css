@@ -2,6 +2,7 @@ body {
     margin: 0 auto;
     position: relative;
     top: 49px;
+    /* background-color: #171614; */
     border-radius: 51px;
     overflow: hidden;
 }
@@ -61,7 +62,7 @@ body {
 
 #__int_win_content {
     position: fixed;
-    top: 0;
+    top: 9px;
     z-index: 9999999999;
     display: flex;
     width: 100%;
@@ -80,7 +81,7 @@ body {
 .__int_win_scrollbar {
     position: fixed;
     right: 0;
-    top: 54px;
+    top: 60px;
     width: 15px;
     height: calc(98% - 44px);
     border-radius: 12px;
@@ -124,4 +125,5 @@ body::-webkit-scrollbar-track {
 webview{
     overflow: auto;
     overflow-y: scroll;
+    background-color: #171614;
 }

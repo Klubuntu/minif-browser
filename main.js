@@ -58,7 +58,6 @@ function createWindow() {
             enableRemoteModule: true,
             webviewTag: true,
         },
-        backgroundColor: '#171614'
     })
     remoteMain.enable(win.webContents)
 
@@ -129,6 +128,9 @@ function createWindow() {
         })
         globalShortcut.register('Alt+R', () => {
             win.webContents.executeJavaScript("document.querySelector('webview').goForward()");
+        })
+        globalShortcut.register('Ctrl+N', () => {
+            createWindow()
         })
         console.warn("Focusing");
     })
