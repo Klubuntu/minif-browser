@@ -1,53 +1,53 @@
-const remoteMain = require('@electron/remote/main')
-remoteMain.initialize()
+const remoteMain = require('@electron/remote/main');
+remoteMain.initialize();
 
 const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
 const protocols = require('electron-protocols');
-const path = require('node:path')
+const path = require('node:path');
 
-let win;
+let windows = new Set(); // Zbiór do przechowywania wszystkich instancji okien
 
-protocols.register('browser', uri => {
+protocols.register('browser', (uri) => {
     let root = app.getAppPath();
     // App Pages
     if (uri.hostname == "start") {
-        return path.join(root, "browser_pages", "home.html")
+        return path.join(root, "browser_pages", "home.html");
     }
     if (uri.hostname == "browser_pages") {
-        return path.join(root, "browser_pages", "test.html")
+        return path.join(root, "browser_pages", "test.html");
     }
     if (uri.hostname == "help") {
-        return path.join(root, "browser_pages", "help.html")
+        return path.join(root, "browser_pages", "help.html");
     }
     // Error Pages
     if ((uri.hostname + uri.path) == "error/file") {
-        return path.join(root, "browser_pages", "error", "file_err.html")
+        return path.join(root, "browser_pages", "error", "file_err.html");
     }
     if ((uri.hostname + uri.path) == "error/404") {
-        return path.join(root, "browser_pages", "error", "404.html")
+        return path.join(root, "browser_pages", "error", "404.html");
     }
-    if ((uri.hostname + uri.path) =="error/cert") {
-        return path.join(root, "browser_pages", "error", "cert_err.html")
+    if ((uri.hostname + uri.path) == "error/cert") {
+        return path.join(root, "browser_pages", "error", "cert_err.html");
     }
-    if ((uri.hostname + uri.path) =="error/cert_date") {
-        return path.join(root, "browser_pages", "error", "cert_date_err.html")
+    if ((uri.hostname + uri.path) == "error/cert_date") {
+        return path.join(root, "browser_pages", "error", "cert_date_err.html");
     }
     if ((uri.hostname + uri.path) == "error/invalid_url") {
-        return path.join(root, "browser_pages", "error", "invalid_url_err.html")
+        return path.join(root, "browser_pages", "error", "invalid_url_err.html");
     }
     if ((uri.hostname + uri.path) == "error/not_resolved") {
-        return path.join(root, "browser_pages", "error", "resolved_err.html")
+        return path.join(root, "browser_pages", "error", "resolved_err.html");
     }
 });
 
-function createWindow() {
-    win = new BrowserWindow({
+const createWindow = () => {
+    const win = new BrowserWindow({
         width: 980,
         height: 552,
         icon: path.join(__dirname, 'assets/icons/logo/256x256.png'),
         titleBarOverlay: false,
         resizable: true,
-        show: true,
+        show: false,
         transparent: true,
         frame: false,
         center: true,
@@ -58,35 +58,28 @@ function createWindow() {
             enableRemoteModule: true,
             webviewTag: true,
         },
-    })
-    remoteMain.enable(win.webContents)
+    });
+
+    remoteMain.enable(win.webContents);
 
     // win.loadURL("browser://frame")
-    win.loadFile("browser_pages/frame.html")
-    win.webContents.on('did-fail-load', (e, errorCode, errorDescription, validatedURL) => {
+    win.loadFile("browser_pages/frame.html");
+
+    win.webContents.on('did-fail-load', (e, errorCode, errorDescription) => {
         console.log(errorCode, ": ", errorDescription);
-        if (errorCode === -2) {
+        if (errorCode === -2 || errorCode === -6) {
             win.loadURL("browser://error/file");
-        }
-        if (errorCode === -6) {
-            win.loadURL("browser://error/file");
-        }
-        if (errorCode === -105) {
+        } else if (errorCode === -105) {
             win.loadURL("browser://error/not_resolved");
-        }
-        if (errorCode === -200) {
+        } else if (errorCode === -200) {
             win.loadURL("browser://error/cert");
-        }
-        if (errorCode === -201) {
+        } else if (errorCode === -201) {
             win.loadURL("browser://error/cert_date");
-        }
-        if (errorCode === -300) {
+        } else if (errorCode === -300) {
             win.loadURL("browser://error/invalid_url");
         }
     });
-    win.webContents.on('did-start-navigation', (e, navigateUrl) => {
-        win.webContents.executeJavaScript(`// Code to execute - before load page`);
-    });
+
     win.webContents.on('did-finish-load', () => {
         win.webContents.executeJavaScript(`
             const content = document.querySelector('#content');
@@ -94,71 +87,68 @@ function createWindow() {
                 content.style.display = 'block';
             }
         `);
-
         win.show();
     });
 
+    win.on('closed', () => {
+        windows.delete(win); // Usuń okno z zestawu po jego zamknięciu
+    });
+
     win.webContents.on('blur', () => {
-        globalShortcut.unregisterAll()
-        console.warn("Not focusing");
-    })
+        globalShortcut.unregisterAll();
+        console.warn("Window lost focus");
+    });
 
     win.webContents.on('focus', () => {
         globalShortcut.register('F1', () => {
-            console.log('Loading help')
-            win.webContents.executeJavaScript("document.querySelector('webview').loadURL('browser://help')")
-        })
+            console.log('Loading help');
+            win.webContents.executeJavaScript("document.querySelector('webview').loadURL('browser://help')");
+        });
         globalShortcut.register('Shift+F12', () => {
-            console.log('Opening app dev_tool')
+            console.log('Opening app dev_tool');
             win.webContents.openDevTools();
-        })
+        });
         globalShortcut.register('F12', () => {
-            console.log('Opening dev_tool')
+            console.log('Opening dev_tool');
             win.webContents.executeJavaScript("document.querySelector('webview').openDevTools()");
-        })
+        });
         globalShortcut.register('Ctrl+Shift+I', () => {
-            console.log('Opening dev_tool')
+            console.log('Opening dev_tool');
             win.webContents.executeJavaScript("document.querySelector('webview').openDevTools()");
-        })
+        });
         globalShortcut.register('Ctrl+R', () => {
             win.webContents.executeJavaScript("document.querySelector('webview').reload()");
-        })
+        });
         globalShortcut.register('Alt+L', () => {
             win.webContents.executeJavaScript("document.querySelector('webview').goBack()");
-        })
+        });
         globalShortcut.register('Alt+R', () => {
             win.webContents.executeJavaScript("document.querySelector('webview').goForward()");
-        })
-        globalShortcut.register('Ctrl+N', () => {
-            createWindow()
-        })
-        console.warn("Focusing");
-    })
+        });
+        globalShortcut.register('Ctrl+N', createWindow);
+    });
 
-
-    ipcMain.on('pageAction', async (e, action) => {
-        console.log(action)
-        if (action == "goBack") {
+    ipcMain.on('pageAction', (e, action) => {
+        console.log(action);
+        if (action === "goBack") {
             win.webContents.navigationHistory.goBack()
-            e.sender.send('Backward page', 'Done')
-            return
-        }
-        if (action == "goForward") {
+            e.sender.send('Backward page', 'Done');
+        } else if (action === "goForward") {
             win.webContents.navigationHistory.goForward()
-            e.sender.send('Forward page', 'Done')
-            return
+            e.sender.send('Forward page', 'Done');
+        } else if (action === "refresh") {
+            win.webContents.reload();
+            e.sender.send('Refresh page', 'Done');
         }
-        if (action == "refresh") {
-            win.webContents.reload()
-            e.sender.send('Refresh page', 'Done')
-            return
-        }
-    })
+    });
 
-}
+    windows.add(win); // Dodaj nowe okno do zestawu
+
+    return win;
+};
 
 app.whenReady().then(() => {
-    createWindow();    
+    createWindow();
 
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
@@ -174,28 +164,22 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.on("windowAction", (e, action) => {
-    console.log(action)
-    if (action == "close") {
-        app.quit()
-        return
-    }
-    if (action == "minimize") {
-        win.minimize()
-        return
-    }
-    if (action == "maximize") {
+    const win = BrowserWindow.getFocusedWindow(); // Pobierz aktualnie aktywne okno
+    if (!win) return;
+
+    console.log(action);
+    if (action === "close") {
+        win.close();
+    } else if (action === "minimize") {
+        win.minimize();
+    } else if (action === "maximize") {
         if (win.isMaximized()) {
             win.unmaximize();
         } else {
             win.maximize();
         }
-        return
+    } else if (action === "unmaximize") {
+        win.unmaximize();
+        win.center();
     }
-    if (action == "unmaximize") {
-        win.unmaximize()
-        win.center()
-        return
-    }
-})
-
-
+});
