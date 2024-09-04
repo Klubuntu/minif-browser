@@ -7,16 +7,24 @@
     <style>
         body{
             color: white;
+            background-color: #171614;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 <body>
     <h1>Welcome on Minif Browser</h1>
-    <h4>Suggested URL:</h4>
-    <button onclick="openURL('gg')">Google</button>
-    <button onclick="openURL('yt')">Youtube</button>
-    <button onclick="openURL('fb')">Facebook</button>
-    <button onclick="openURL('am')">Amazon</button>
+    <h4>Suggested Pages:</h4>
+    <div class="recommended">
+        <button onclick="openURL('gg')">Google</button>
+        <button onclick="openURL('yt')">Youtube</button>
+        <button onclick="openURL('fb')">Facebook</button>
+        <button onclick="openURL('am')">Amazon</button>
+    </div>
+
 
     <script>
         const openURL = (url) => {
