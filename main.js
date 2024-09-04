@@ -11,32 +11,32 @@ protocols.register('browser', uri => {
     let root = app.getAppPath();
     // App Pages
     if (uri.hostname == "start") {
-        return path.join(root, "demo", "home.html")
+        return path.join(root, "browser_pages", "home.html")
     }
-    if (uri.hostname == "demo") {
-        return path.join(root, "demo", "test.html")
+    if (uri.hostname == "browser_pages") {
+        return path.join(root, "browser_pages", "test.html")
     }
     if (uri.hostname == "help") {
-        return path.join(root, "demo", "help.html")
+        return path.join(root, "browser_pages", "help.html")
     }
     // Error Pages
     if ((uri.hostname + uri.path) == "error/file") {
-        return path.join(root, "demo", "error", "file_err.html")
+        return path.join(root, "browser_pages", "error", "file_err.html")
     }
     if ((uri.hostname + uri.path) == "error/404") {
-        return path.join(root, "demo", "error", "404.html")
+        return path.join(root, "browser_pages", "error", "404.html")
     }
     if ((uri.hostname + uri.path) =="error/cert") {
-        return path.join(root, "demo", "error", "cert_err.html")
+        return path.join(root, "browser_pages", "error", "cert_err.html")
     }
     if ((uri.hostname + uri.path) =="error/cert_date") {
-        return path.join(root, "demo", "error", "cert_date_err.html")
+        return path.join(root, "browser_pages", "error", "cert_date_err.html")
     }
     if ((uri.hostname + uri.path) == "error/invalid_url") {
-        return path.join(root, "demo", "error", "invalid_url_err.html")
+        return path.join(root, "browser_pages", "error", "invalid_url_err.html")
     }
     if ((uri.hostname + uri.path) == "error/not_resolved") {
-        return path.join(root, "demo", "error", "resolved_err.html")
+        return path.join(root, "browser_pages", "error", "resolved_err.html")
     }
 });
 
@@ -62,7 +62,7 @@ function createWindow() {
     remoteMain.enable(win.webContents)
 
     // win.loadURL("browser://frame")
-    win.loadFile("demo/frame.html")
+    win.loadFile("browser_pages/frame.html")
     win.webContents.on('did-fail-load', (e, errorCode, errorDescription, validatedURL) => {
         console.log(errorCode, ": ", errorDescription);
         if (errorCode === -2) {
