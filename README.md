@@ -34,6 +34,7 @@ npm/pnpm run build-macos (experimental)
 - <kbd>ALT</kbd> + <kbd>R</kbd> History forward
 - <kbd>CTRL</kbd> + <kbd>+</kbd> Zoom In
 - <kbd>CTRL</kbd> + <kbd>-</kbd> Zoom Out
+- <kbd>CTRL</kbd> + <kbd>N</kbd> Create new instance (**experimental**)
 
 
 Pull requests are welcome
