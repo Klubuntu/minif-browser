@@ -19,24 +19,25 @@ body {
 .__int_win_box_page_btns,
 .__int_win_box_action_btns {
     display: flex;
-}
-
-.__int_win_box_page_btns {
     align-items: center;
     justify-content: center;
+}
+
+.__int_win_action_page{
+    padding: 0px 5px;
+}
+
+.__int_win_action_win{
+    padding: 5px 5px;
 }
 
 .__int_win_opt.page_refresh {
     position: relative;
     font-size: 160%;
-    position: relative;
-    top: 0.5px;
-    right: 10px;
 }
 
-.__int_win_opt.page_forward {
-    position: relative;
-    right: 17px;
+.__int_win_opt.window_close {
+    padding: 2px 3px;
 }
 
 .__int_win_title {
@@ -71,7 +72,6 @@ body {
 }
 .__int_win_opt {
     color: white;
-    padding: 3px 10px;
     font-size: 16px;
     cursor: pointer;
     -webkit-app-region: no-drag;
