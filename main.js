@@ -5,8 +5,7 @@ const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
 const protocols = require('electron-protocols');
 const path = require('node:path');
 
-let windows = new Set(); // Zbiór do przechowywania wszystkich instancji okien
-
+let windows = new Set();
 protocols.register('browser', (uri) => {
     let root = app.getAppPath();
     // App Pages
@@ -142,7 +141,7 @@ const createWindow = () => {
         }
     });
 
-    windows.add(win); // Dodaj nowe okno do zestawu
+    windows.add(win);
 
     return win;
 };
@@ -163,8 +162,14 @@ app.on('window-all-closed', () => {
     }
 });
 
+ipcMain.on("updateWinTitle", (e, title) => {
+    const win = BrowserWindow.getFocusedWindow();
+    if (!win) return;
+    win.setTitle(title);
+})
+
 ipcMain.on("windowAction", (e, action) => {
-    const win = BrowserWindow.getFocusedWindow(); // Pobierz aktualnie aktywne okno
+    const win = BrowserWindow.getFocusedWindow();
     if (!win) return;
 
     console.log(action);
