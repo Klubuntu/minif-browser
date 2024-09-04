@@ -13,6 +13,7 @@ body {
     justify-content: space-between;
     background: #353535;
     color: black;
+    font-family: Calibri, Roboto, system-ui;
     border-radius: 12px;
     align-self: stretch;
     -webkit-app-region: drag;
