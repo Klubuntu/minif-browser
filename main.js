@@ -4,6 +4,7 @@ remoteMain.initialize();
 const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
 const protocols = require('electron-protocols');
 const path = require('node:path');
+const fs = require('node:fs');
 
 let windows = new Set();
 protocols.register('browser', (uri) => {
@@ -12,7 +13,12 @@ protocols.register('browser', (uri) => {
     if (uri.hostname == "start") {
         return path.join(root, "browser_pages", "home.html");
     }
-    if (uri.hostname == "browser_pages") {
+    if (uri.hostname == "img") {
+        if(uri.path == "/background-newtab.png"){
+            return path.join(root, "browser_pages", "assets", "backgrounds", "lightscape-background.png");
+        }
+    }
+    if (uri.hostname == "browser-pages") {
         return path.join(root, "browser_pages", "test.html");
     }
     if (uri.hostname == "help") {
@@ -190,3 +196,9 @@ ipcMain.on("windowAction", (e, action) => {
         win.center();
     }
 });
+
+ipcMain.on("loadJSON", (e, name) => {
+    const jsonPath = path.join(app.getAppPath(), "assets", "json");
+    const jsonFile = fs.readFileSync("" + jsonPath + "/" + name + ".json", "utf8");
+    e.sender.send("jsonLoaded", jsonFile);
+})
