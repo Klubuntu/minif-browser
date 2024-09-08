@@ -18,8 +18,14 @@ protocols.register('browser', (uri) => {
             return path.join(root, "browser_pages", "assets", "backgrounds", "lightscape-background.png");
         }
     }
-    if (uri.hostname == "browser-pages") {
+    if (uri.hostname == "demo") {
         return path.join(root, "browser_pages", "test.html");
+    }
+    if (uri.hostname == "history") {
+        return path.join(root, "browser_pages", "history.html");
+    }
+    if (uri.hostname == "history_data.json") {
+        return path.join(app.getPath("userData"), "history", 'history.json');
     }
     if (uri.hostname == "help") {
         return path.join(root, "browser_pages", "help.html");
@@ -201,4 +207,17 @@ ipcMain.on("loadJSON", (e, name) => {
     const jsonPath = path.join(app.getAppPath(), "assets", "json");
     const jsonFile = fs.readFileSync("" + jsonPath + "/" + name + ".json", "utf8");
     e.sender.send("jsonLoaded", jsonFile);
+})
+
+ipcMain.on("saveHistoryFile", (e, history) => {
+    if(!fs.existsSync("" + app.getPath("userData") + "/history")) {
+        fs.mkdirSync("" + app.getPath("userData") + "/history");
+    }
+    fs.writeFileSync("" + app.getPath("userData") + "/history/history.json", JSON.stringify(history));
+})
+
+ipcMain.on("loadHistoryFile", (e, file) => {
+    const historyPath = path.join(app.getPath("userData"), "history");
+    const historyFile = fs.readFileSync("" + historyPath + "/" + "history" + ".json", "utf8");
+    e.sender.send("historyLoaded", historyFile);
 })
