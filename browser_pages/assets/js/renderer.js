@@ -2,6 +2,7 @@ const { ipcRenderer } = require('electron');
 
 var oldURL = "";
 var __int_tlds;
+var __int_global_history = [];
 
 ipcRenderer.send('loadJSON', 'tlds');
 ipcRenderer.on('jsonLoaded', (e, jsonData) => {
@@ -11,6 +12,17 @@ ipcRenderer.on('jsonLoaded', (e, jsonData) => {
 const getTldFromInput = (input) => {
     const domainParts = input.split('.');
     return domainParts.pop();
+}
+
+const saveHistory = (url, title) => {
+    // ipcRenderer.send("saveHistory", url, title)
+    const historyObject = {
+        url: url,
+        title: title
+    }
+    if(historyObject.url.length == 0 || historyObject.title.length == 0) return
+    __int_global_history.push(historyObject)
+    ipcRenderer.send("saveHistoryFile", __int_global_history)
 }
 
 const setWebviewSize = () => {
@@ -100,6 +112,14 @@ window.addEventListener("DOMContentLoaded", () => {
         ipcRenderer.send("updateWinTitle", titlePage.textContent)
         urlInput.value = webviewElm.getURL();
         webviewElm.insertCSS("body::-webkit-scrollbar{position:relative;right:20px;width:20px}body::-webkit-scrollbar-corner{background:rgba(0,0,0,.5)}body::-webkit-scrollbar-thumb{background-color:#444;border-radius:12px;border:4px solid transparent;background-clip:content-box;min-height:32px}body::-webkit-scrollbar-track{background-color:rgba(0,0,0,0)}")
+        saveHistory(webviewElm.getURL(), webviewElm.getTitle())
+
+        if(webviewElm.getURL() == "browser://history"){
+            ipcRenderer.send('loadHistoryFile', 'global_history');
+            ipcRenderer.on('historyLoaded', (e, jsonData) => {
+                // const __int_global_history = JSON.parse(jsonData);
+            })
+        }
     })
 
     webviewElm.addEventListener('dom-ready', () => {
@@ -127,7 +147,6 @@ window.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             // Detect Domain have TLD
             const isTLD = Object.values(__int_tlds).some(val => val.includes(getTldFromInput(urlInput.value.toUpperCase())));
-            console.warn(isTLD)
             oldURL = urlInput.value
             if (isTLD) {
                 if (/^http?:\/\//.test(oldURL) == false) {

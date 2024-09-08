@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Browser</title>
+    <style>
+        body {
+            color: white;
+            background-color: #171614;
+        }
+
+        .info1 {
+            margin-bottom: 15px;
+        }
+
+        .info2 {
+            margin-top: 5px;
+            font-weight: 500;
+        }
+
+        a{color: red; text-decoration: none;}
+    </style>
+</head>
+
+<body>
+    <h1 class="info1">History</h1>
+    <div id="history_content"></div>
+    <!-- <ul class>
+        <li>Home</li>
+        <li>History</li>
+        <li>Help</li>
+    </ul> -->
+    <p>Minif Browser - Copyright (v1.3) &copy;</p>
+
+    <script>
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', 'browser://history_data.json', true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                var data = JSON.parse(xhr.responseText);
+                var list = document.createElement("ul");
+                for (const elm of data) {
+                    let a = document.createElement("a")
+                    a.href = elm.url
+                    a.innerText = elm.title
+                    let li = document.createElement("li")
+                    li.appendChild(a)
+                    list.appendChild(li)
+                };
+                document.querySelector("#history_content").append(list)
+            }
+        };
+        xhr.onerror = function () {
+            console.error('Error:', xhr.statusText);
+        };
+        xhr.send();
+
+        const openURL = (url) => {
+            window.location.href = url
+        }
+    </script>
+</body>
+
+</html>
