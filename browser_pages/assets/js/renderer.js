@@ -1,6 +1,17 @@
 const { ipcRenderer } = require('electron');
 
 var oldURL = "";
+var __int_tlds;
+
+ipcRenderer.send('loadJSON', 'tlds');
+ipcRenderer.on('jsonLoaded', (e, jsonData) => {
+    __int_tlds = JSON.parse(jsonData);
+})
+
+const getTldFromInput = (input) => {
+    const domainParts = input.split('.');
+    return domainParts.pop();
+}
 
 const setWebviewSize = () => {
     const windowWidth = document.documentElement.clientWidth;
@@ -75,15 +86,7 @@ window.addEventListener("DOMContentLoaded", () => {
             webviewElm.loadURL("browser://error/cert_date");
         }
         if (e.errorCode === -300) {
-            // webviewElm.loadURL("browser://error/invalid_url");
-            if(/^https?:\/\//.test(oldURL) == false){
-                const searchURL = "https://www.google.com/search?q="
-                const searchQuery = searchURL + oldURL;
-                console.log(searchQuery)
-                webviewElm.loadURL(searchQuery);
-            } else {
-                webviewElm.loadURL("browser://error/invalid_url");
-            }
+            webviewElm.loadURL("browser://error/invalid_url");
         }
     })
 
@@ -96,6 +99,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         ipcRenderer.send("updateWinTitle", titlePage.textContent)
         urlInput.value = webviewElm.getURL();
+        webviewElm.insertCSS("body::-webkit-scrollbar{position:relative;right:20px;width:20px}body::-webkit-scrollbar-corner{background:rgba(0,0,0,.5)}body::-webkit-scrollbar-thumb{background-color:#444;border-radius:12px;border:4px solid transparent;background-clip:content-box;min-height:32px}body::-webkit-scrollbar-track{background-color:rgba(0,0,0,0)}")
     })
 
     webviewElm.addEventListener('dom-ready', () => {
@@ -107,6 +111,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
         ipcRenderer.send("updateWinTitle", titlePage.textContent)
         urlInput.value = webviewElm.getURL();
+        webviewElm.insertCSS("body::-webkit-scrollbar{position:relative;right:20px;width:20px}body::-webkit-scrollbar-corner{background:rgba(0,0,0,.5)}body::-webkit-scrollbar-thumb{background-color:#444;border-radius:12px;border:4px solid transparent;background-clip:content-box;min-height:32px}body::-webkit-scrollbar-track{background-color:rgba(0,0,0,0)}")
     })
 
     titlePage.addEventListener("click", () => {
@@ -120,8 +125,24 @@ window.addEventListener("DOMContentLoaded", () => {
     urlInput.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
             e.preventDefault();
+            // Detect Domain have TLD
+            const isTLD = Object.values(__int_tlds).some(val => val.includes(getTldFromInput(urlInput.value.toUpperCase())));
+            console.warn(isTLD)
             oldURL = urlInput.value
-            webviewElm.loadURL(urlInput.value)
+            if (isTLD) {
+                if (/^http?:\/\//.test(oldURL) == false) {
+                    const newURL = "http://" + oldURL
+                    webviewElm.loadURL(newURL);
+                } else {
+                    webviewElm.loadURL(urlInput.value)
+                }
+            } else {
+                const searchURL = "https://www.google.com/search?q="
+                const searchQuery = searchURL + oldURL;
+                console.log(searchQuery)
+                webviewElm.loadURL(searchQuery);
+            }
+
             urlInput.style.display = "none";
             titlePage.style.display = "block";
         }
