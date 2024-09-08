@@ -15,6 +15,14 @@
             justify-content: center;
         }
 
+        .searchbar{
+            width: 70%;
+            padding: 10px 20px;
+            border: 0;
+            outline: 0;
+            border-radius: 10px;
+        }
+
         .recommended button {
             background: none;
             border: none;
@@ -22,7 +30,6 @@
         }
         .recommended button svg path:hover{
             transition: 0.6s all;
-
         }
         .recommended button.google svg path:hover{
             fill: rgb(152, 236, 174);
@@ -41,12 +48,12 @@
 
 <body>
     <h1>Welcome on Minif Browser</h1>
+    <input id="searchbar" class="searchbar" type="text" name="" id="" placeholder="Search on Network (enter to search)">
     <h4>Suggested Pages:</h4>
     <div class="recommended">
 
         <button class="google" onclick="openURL('gg')">
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-
             <svg width="65px" height="65px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0" />
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
@@ -56,11 +63,9 @@
                         fill="#ffffff" />
                 </g>
             </svg>
-
         </button>
         <button class="youtube" onclick="openURL('yt')">
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-
             <svg width="65px" height="65px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0" />
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
@@ -70,11 +75,9 @@
                         fill="#ffffff" />
                 </g>
             </svg>
-
         </button>
         <button class="facebook" onclick="openURL('fb')">
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-
             <svg width="65px" height="65px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0" />
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
@@ -84,11 +87,9 @@
                         fill="#ffffff" />
                 </g>
             </svg>
-
         </button>
         <button class="amazon" onclick="openURL('am')">
             <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-
             <svg width="65px" height="65px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g id="SVGRepo_bgCarrier" stroke-width="0" />
                 <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
@@ -98,7 +99,6 @@
                         fill="#ffffff" />
                 </g>
             </svg>
-
         </button>
     </div>
 
@@ -120,8 +120,15 @@
                     break
             }
             window.location.href = rURL
-
         }
+        const searchBar = document.querySelector("#searchbar");
+        searchBar.addEventListener("keyup", (event) => {
+            if (event.key === "Enter") {
+                const query = searchBar.value
+                const search_url = "https://google.com/search?q=" + query
+                window.location.href = search_url
+            }
+        })
     </script>
 </body>
 
